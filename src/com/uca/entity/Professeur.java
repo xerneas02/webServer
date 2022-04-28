@@ -16,21 +16,6 @@ public class Professeur extends Entity{
         setMdp(mdp);
     }
 
-    public void add(){
-        Connection connection = _Connector.getInstance();
-        try {
-            PreparedStatement statement;
-            statement = connection.prepareStatement("INSERT INTO " + table + "(id, firstname, lastname, mdp) VALUES(?, ?, ?, ?);");
-            statement.setInt(1, this.id);
-            statement.setString(2, this.firstName);
-            statement.setString(3, this.lastName);
-            statement.setString(4, this.mdp);
-            statement.executeUpdate();
-        } catch (Exception e){
-            System.out.println(e.toString());
-            throw new RuntimeException("could not insert " + table + " !");
-        }
-    }
 
     public void setMdp(String mdp) {
         this.mdp = mdp;
@@ -41,16 +26,16 @@ public class Professeur extends Entity{
     }
 
     public void addEleve(String firstname, String lastname){
-        statement = connection.prepareStatement("SELECT MAX(id) maxId FROM eleve;");
-        ResultSet result = statement.executeQuery();
-        if (result.next()){
-            int idMax = result.getInt("maxId");
-            Eleve eleve = new Eleve(idMax+1, firstname, lastname);
-            eleve.add();
-        }
-        else{
-            Eleve eleve = new Eleve(0, firstname, lastname);
-            eleve.add();
+        Connection connection = _Connector.getInstance();
+        try {
+            PreparedStatement statement;
+            statement = connection.prepareStatement("INSERT INTO eleve(firstname, lastname) VALUES(?, ?);");
+            statement.setString(1, firstname);
+            statement.setString(2, lastname);
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e.toString());
+            throw new RuntimeException("could not insert eleve !");
         }
     }
 }

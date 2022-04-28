@@ -2,7 +2,7 @@ package com.uca.dao;
 
 import java.sql.*;
 
-import com.uca.entity.Eleve;
+import com.uca.entity.*;
 
 public class _Initializer {
 
@@ -39,26 +39,15 @@ public class _Initializer {
                                                                                             "date date);");
             statement.executeUpdate();
 
-
-
-            statement = connection.prepareStatement("SELECT MAX(id) maxId FROM eleve;");
-            ResultSet result = statement.executeQuery();
-            if (result.next()){
-                int idMax = result.getInt("maxId");
-                Eleve thomas = new Eleve(idMax+1, "Thomas", "Dupois");
-                thomas.add();
-            }
-            else{
-                Eleve thomas = new Eleve(0, "Thomas", "Dupois");
-                thomas.add();
-            }
             //Todo Remove me !
+            Professeur prof = new Professeur(1, "Professeur", "Random", "Mdp");
+            prof.addEleve("Thomas", "Dupois");
             /*
-            statement = connection.prepareStatement("INSERT INTO users(firstname, lastname) VALUES(?, ?);");
-            statement.setString(1, "Theodore");
-            statement.setString(2, "Muillerez");
-            statement.executeUpdate();
-            */
+            statement = connection.prepareStatement("INSERT INTO professeur(firstname, lastname, mdp) VALUES(?, ?, ?);");
+            statement.setString(1, "mathis");
+            statement.setString(2, "roubille");
+            statement.setString(3, "1234");
+            statement.executeUpdate();*/
 
         } catch (Exception e){
             System.out.println(e.toString());

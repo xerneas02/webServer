@@ -1,7 +1,6 @@
 package com.uca.dao;
 
-import com.uca.Eleve.*;
-import com.uca.entity.Eleve;
+import com.uca.entity.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -53,6 +52,29 @@ public class UserDAO extends _Generic<Eleve> {
             System.out.println(e.toString());
             throw new RuntimeException("could not modified eleve !");
         }
+    }
+
+    public Professeur getProfesseur(String name) {
+        try {
+            Professeur result = new Professeur();
+            PreparedStatement statement = this.connect.prepareStatement("SELECT * FROM professeur WHERE lastname = ? ;");
+            statement.setString(1, name);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()) {
+                result.setFirstName(rs.getString("firstname"));
+                result.setLastName(rs.getString("lastname"));
+                result.setMdp(rs.getString("mdp"));
+            }
+            else{
+                return null;
+            }
+            return result;
+            
+        } catch (Exception e){
+            return null;
+        }
+        
+        
     }
 
     @Override
