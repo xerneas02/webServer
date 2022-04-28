@@ -28,12 +28,33 @@ public class UserDAO extends _Generic<Eleve> {
         return entities;
     }
 
+    public ArrayList<Professeur> getAllProfesseurs() {
+        ArrayList<Professeur> entities = new ArrayList<>();
+        try {
+            
+            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM professeur ORDER BY id ASC;");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id  = resultSet.getInt("id");
+                String firstName = resultSet.getString("firstname");
+                String lastName = resultSet.getString("lastname");
+                String mdp = resultSet.getString("mdp");
+                Professeur Prof = new Professeur(id, firstName, lastName, mdp);
+
+                entities.add(Prof);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return entities;
+    }
+
     public void updateFirstName(Eleve obj, String firstName){
         obj.setFirstName(firstName);
-        Connection connection = _Connector.getInstance();
         try {
             PreparedStatement statement;
-            statement = connection.prepareStatement("UPDATE eleve SET firstname = " + firstName + " WHERE id == " + obj.getId() + ";");
+            statement = this.connect.prepareStatement("UPDATE eleve SET firstname = " + firstName + " WHERE id = " + obj.getId() + ";");
             statement.executeUpdate();
         } catch (Exception e){
             System.out.println(e.toString());
@@ -43,10 +64,9 @@ public class UserDAO extends _Generic<Eleve> {
 
     public void updateLastName(Eleve obj, String lastName){
         obj.setFirstName(lastName);
-        Connection connection = _Connector.getInstance();
         try {
             PreparedStatement statement;
-            statement = connection.prepareStatement("UPDATE eleve SET lastName = " + lastName + " WHERE id == " + obj.getId() + ";");
+            statement = this.connect.prepareStatement("UPDATE eleve SET lastName = " + lastName + " WHERE id = " + obj.getId() + ";");
             statement.executeUpdate();
         } catch (Exception e){
             System.out.println(e.toString());
@@ -79,10 +99,9 @@ public class UserDAO extends _Generic<Eleve> {
 
     @Override
     public Eleve create(Eleve obj) {
-        Connection connection = _Connector.getInstance();
         try {
             PreparedStatement statement;
-            statement = connection.prepareStatement("INSERT INTO eleve(firstname, lastname) VALUES(?, ?);");
+            statement = this.connect.prepareStatement("INSERT INTO eleve(firstname, lastname) VALUES(?, ?);");
             statement.setString(1, obj.getFirstName());
             statement.setString(2, obj.getLastName());
             statement.executeUpdate();
@@ -94,12 +113,37 @@ public class UserDAO extends _Generic<Eleve> {
         return obj;
     }
 
-    @Override
-    public void delete(Eleve obj) {
-        Connection connection = _Connector.getInstance();
+    public void create(String firstname, String lastname) {
         try {
             PreparedStatement statement;
-            statement = connection.prepareStatement("DELETE FROM eleve WHERE id == " + obj.getId() + ";");
+            statement = this.connect.prepareStatement("INSERT INTO eleve(firstname, lastname) VALUES(?, ?);");
+            statement.setString(1, firstname);
+            statement.setString(2, lastname);
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println("could not insert eleve !\n" + e.toString());
+            throw new RuntimeException("could not insert eleve !");
+        }
+    }
+
+    @Override
+    public void delete(Eleve obj) {
+        try {
+            PreparedStatement statement;
+            statement = this.connect.prepareStatement("DELETE FROM eleve WHERE id = ?;");
+            statement.setInt(1, obj.getId());
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e.toString());
+            throw new RuntimeException("could not delete eleve !");
+        }
+    }
+
+    public void delete(String id) {
+        try {
+            PreparedStatement statement;
+            statement = this.connect.prepareStatement("DELETE FROM eleve WHERE id = ?;");
+            statement.setString(1, id);
             statement.executeUpdate();
         } catch (Exception e){
             System.out.println(e.toString());

@@ -33,16 +33,57 @@ public class StartServer {
             return null;
         });
 
+        post("/eleves", (req, res) -> {
+            String id = req.queryParams("delet");
+            if(id != null){
+                char[] idArray = id.toCharArray();
+                String numbers = "0123456789";
+                for  (int i = 0; i < idArray.length ;i++) {
+                   if(!numbers.contains(idArray[i] + "")){
+                       idArray[i] = ' ';
+                   }
+                }
+                id = new String(idArray);
+                id = id.replaceAll(" ", "");
+                System.out.println(id);
+                UserCore.deleteEleve(id);
+            }
+            else{
+                String firstName = req.queryParams("firstname");
+                String lastname = req.queryParams("lastname");
+                UserCore.addEleve(firstName, lastname);
+            }
+            res.redirect("/eleves");
+            return null;
+        });
+
         get("/login", (req, res) -> {
             return ConexionGui.login();
         });
 
-        get("/users", (req, res) -> {
-            return UserGUI.getAllEleves();
+        get("/eleves", (req, res) -> {
+            if(req.session().attribute("name")== null)
+            {
+                res.redirect("/login");
+                return null;
+            }else{
+                return UserGUI.getAllEleves();
+            }
+        });
+
+        get("/profs", (req, res) -> {
+            return ProfGUI.getAllProfesseurs();
         });
 
         get("/", (req, res) -> {
-            return UserGUI.getAllEleves();
+            System.out.println(req.session());
+            if(req.session().attribute("name")== null)
+            {
+                res.redirect("/login");
+            }else{
+                res.redirect("/eleves");
+            }
+            return null;
         });
         /*
         get("/login", (req, res) ->{

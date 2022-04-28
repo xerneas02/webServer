@@ -11,9 +11,21 @@ public class UserCore {
         return new UserDAO().getAllEleves();
     }
 
+    public static ArrayList<Professeur> getAllProfesseurs() {
+        return new UserDAO().getAllProfesseurs();
+    }
+
     public static boolean checkLogin(String name, String password) {
         Professeur test = new UserDAO().getProfesseur(name);
         return test != null && test.getMdp().equals(password);
+    }
+
+    public static void deleteEleve(String id){
+        new UserDAO().delete(id);
+    }
+
+    public static void addEleve(String firstName, String lastName){
+        new UserDAO().create(firstName, lastName);
     }
 
 }

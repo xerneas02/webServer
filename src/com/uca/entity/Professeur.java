@@ -24,18 +24,4 @@ public class Professeur extends Entity{
     public String getMdp() {
         return mdp;
     }
-
-    public void addEleve(String firstname, String lastname){
-        Connection connection = _Connector.getInstance();
-        try {
-            PreparedStatement statement;
-            statement = connection.prepareStatement("INSERT INTO eleve(firstname, lastname) VALUES(?, ?);");
-            statement.setString(1, firstname);
-            statement.setString(2, lastname);
-            statement.executeUpdate();
-        } catch (Exception e){
-            System.out.println(e.toString());
-            throw new RuntimeException("could not insert eleve !");
-        }
-    }
 }
