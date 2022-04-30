@@ -25,7 +25,6 @@ public class StartServer {
             String lastname  = req.queryParams("lastname");
             String password  = req.queryParams("password");
             int id = UserCore.checkLogin(lastname, firstname, password);
-            System.out.println(id);
             if (id > -1)
             {
                 req.session(true);
@@ -71,7 +70,6 @@ public class StartServer {
         post("/elevesModif", (req, res) -> {
             String id = req.queryParams("modif");
             if(id != null){
-                System.out.println(id);
                 String firstName = req.queryParams("firstname-"+id);
                 String lastName = req.queryParams("lastname-"+id);     
                 id = removeSpaces(id);
@@ -144,11 +142,9 @@ public class StartServer {
                     String couleur     = req.queryParams("couleur");
                     String description = req.queryParams("description");
                     String motif       = req.queryParams("motif");
-                    System.out.println(couleur + " " + description + " " + motif);
                     if(couleur != "" && description != "" && motif != "")
                     {
                         int id = req.session().attribute("id");
-                        System.out.println(id);
                         UserCore.addGommette(eleve, couleur, description, motif, id);
                     }
                 }

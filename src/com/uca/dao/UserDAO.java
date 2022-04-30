@@ -1,6 +1,7 @@
 package com.uca.dao;
 
 import com.uca.entity.*;
+import com.uca.core.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -137,9 +138,28 @@ public class UserDAO extends _Generic<Eleve> {
             
         } catch (Exception e){
             return null;
-        }
-        
-        
+        }      
+    }
+
+    public Eleve getEleve(String id) {
+        try {
+            Eleve result = new Eleve();
+            PreparedStatement statement = this.connect.prepareStatement("SELECT * FROM eleve WHERE id = ?;");
+            statement.setString(1, id);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()) {
+                result.setId(rs.getInt("id"));
+                result.setFirstName(rs.getString("firstname"));
+                result.setLastName(rs.getString("lastname"));
+            }
+            else{
+                return null;
+            }
+            return result;
+            
+        } catch (Exception e){
+            return null;
+        }   
     }
 
     public void addGommette(Eleve eleve, String couleur, String description, String motif, int id) {
@@ -224,6 +244,17 @@ public class UserDAO extends _Generic<Eleve> {
     public void delete(Eleve obj) {
         try {
             PreparedStatement statement;
+            ArrayList<Gommette> gommettes = UserCore.getAllEleveGommettes(obj);
+
+            statement = this.connect.prepareStatement("DELETE FROM eleveGommette WHERE idEleve = ?;");
+            statement.setInt(1, obj.getId());
+            statement.executeUpdate();            
+            
+            for (Gommette gommette : gommettes)
+            {
+                UserCore.deleteGommette(gommette.getId() + ""); //convert int into sting
+            }
+            
             statement = this.connect.prepareStatement("DELETE FROM eleve WHERE id = ?;");
             statement.setInt(1, obj.getId());
             statement.executeUpdate();
@@ -235,10 +266,8 @@ public class UserDAO extends _Generic<Eleve> {
 
     public void delete(String id) {
         try {
-            PreparedStatement statement;
-            statement = this.connect.prepareStatement("DELETE FROM eleve WHERE id = ?;");
-            statement.setString(1, id);
-            statement.executeUpdate();
+            Eleve eleve = getEleve(id);
+            delete(eleve);
         } catch (Exception e){
             System.out.println(e.toString());
             throw new RuntimeException("could not delete eleve !");
