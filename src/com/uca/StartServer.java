@@ -140,7 +140,6 @@ public class StartServer {
             post(page, (req, res) -> {
                 String add = req.queryParams("add");
                 String idGommette  = req.queryParams("delete");
-                System.out.println(add);
                 if(add != null){
                     String couleur     = req.queryParams("couleur");
                     String description = req.queryParams("description");
