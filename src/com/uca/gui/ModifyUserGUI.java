@@ -1,6 +1,6 @@
 package com.uca.gui;
 
-import com.uca.core.UserCore;
+import com.uca.core.Core;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -18,7 +18,7 @@ public class ModifyUserGUI {
 
         Map<String, Object> input = new HashMap<>();
 
-        input.put("users", UserCore.getAllEleves());
+        input.put("users", Core.getAllEleves());
 
         Writer output = new StringWriter();
         Template template = configuration.getTemplate("users/usersModify.ftl");

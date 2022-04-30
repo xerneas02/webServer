@@ -11,18 +11,15 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserGUI {
+public class IndexGUI {
     
-    public static String getAllEleves(boolean connexion) throws IOException, TemplateException {
+    public static String getIndex() throws IOException, TemplateException {
         Configuration configuration = _FreeMarkerInitializer.getContext();
 
         Map<String, Object> input = new HashMap<>();
 
-        input.put("users", Core.getAllEleves());
-        input.put("connexion", connexion ? 1 : 0);
-
         Writer output = new StringWriter();
-        Template template = configuration.getTemplate("users/users.ftl");
+        Template template = configuration.getTemplate("index.ftl");
 
         template.setOutputEncoding("UTF-8");
         template.process(input, output);

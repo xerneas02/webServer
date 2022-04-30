@@ -7,7 +7,8 @@
         <input type="text" name="firstname" placeholder="Prenom">
         <input type="text" name="lastname" placeholder="Nom">
         <input type="password" name="password" placeholder="Mot de passe">
-        <button type="submit">Connection</button>
+        <button type="submit" value="connexion" name="connexion">Connexion</button>
+        <button type="submit" value="back" name="back">Retour</button>
     </form>
 </ul>
 

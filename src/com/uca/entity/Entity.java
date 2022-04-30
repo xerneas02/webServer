@@ -7,7 +7,6 @@ public class Entity {
     protected String firstName;
     protected String lastName;
     protected int id;
-    protected String table;
 
     public Entity() {}
 
@@ -39,14 +38,5 @@ public class Entity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-        /*Connection connection = _Connector.getInstance();
-        try {
-            PreparedStatement statement;
-            statement = connection.prepareStatement("UPDATE " + table + "SET lastName = " + this.lastName + " WHERE id == " + this.id + ";");
-            statement.executeUpdate();
-        } catch (Exception e){
-            System.out.println("could not insert " + table + " !\n" + e.toString());
-            //throw new RuntimeException("could modified " + table + " !");
-        }*/
     }
 }

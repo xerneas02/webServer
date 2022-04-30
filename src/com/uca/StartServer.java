@@ -1,6 +1,6 @@
 package com.uca;
 
-import com.uca.core.UserCore;
+import com.uca.core.Core;
 import com.uca.dao._Initializer;
 import com.uca.gui.*;
 import com.uca.entity.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import static spark.Spark.*;
 
 public class StartServer {
-
+    static String eleveSelect = null;
     public static void main(String[] args) {
         //Configure Spark
         staticFiles.location("/static/");
@@ -19,22 +19,133 @@ public class StartServer {
         _Initializer.Init();
 
         //Defining our routes
-        
-        post("/login", (req, res) -> {
-            String firstname = req.queryParams("firstname");
-            String lastname  = req.queryParams("lastname");
-            String password  = req.queryParams("password");
-            int id = UserCore.checkLogin(lastname, firstname, password);
-            if (id > -1)
+
+        //----  Definig gets  ----//
+        get("/", (req, res) -> {
+            /*
+            Page d'acceuil avec 3 bouttons:
+                -Connexion qui renvoie vers la page de connexion
+                -Eleves qui renvoie vers la pages eleves
+                -Gommettes qui renvoie vers la page gommettes
+            */
+            return IndexGUI.getIndex();
+        });
+
+        get("/login", (req, res) -> {
+            /*
+            Page de connexion contien 3 labels:
+                -Prenom
+                -Nom
+                -Mot de passe
+            Et 2 bouttons:
+                -Connexion qui veriffie le nom, le prenom et le mot de passe et connecte la personne si ils sont valide
+                -Retour qui renvoie vers la page d'acceuil
+            */
+            return ConexionGui.login();
+        });
+
+        get("/eleves", (req, res) -> {
+            /*
+            Contien la liste de tout les eleves.
+            A côté de chaque élève il y a un boutton gommette qui renvoie vers la page gommettesEleve de l'eleve et
+            si vous êtes connectez un boutton supprimer qui supprime l'eleve.
+            Un boutton retour qui renvoie à la page d'acceuil.
+            Et si vous êtes connécté 2 labels :
+                -Prenom
+                -Nom
+            et 2 Bouttons :
+                -Ajouter qui, si les 2 labels sont remplits, ajoute l'élève
+                -Modifier qui renvoie vers la page eleveModif
+            */
+            boolean isConnected = req.session().attribute("lastname") != null;
+            return UserGUI.getAllEleves(isConnected);
+        });
+
+        get("/gommettes", (req, res) -> {
+            /*
+            Contiens la liste de toutes les gommettes,
+            Si vous êtes connécté un boutton supprimer à côté de chaque gommettes pour la supprimer
+            En bas de page un boutton retour qui renvoie vers la page d'acceuil.
+            Et si vous êtes connectez une selection pour choisir entre rouge et blanc
+            un label description
+            et un boutton ajouter qui ajoute une gommette si tout les champs sont remplis.
+            */
+            boolean isConnected = req.session().attribute("lastname") != null;
+            return GommetteGUI.getAllGommettes(isConnected);
+        });
+
+        get("/elevesModif", (req, res) -> {
+            /*
+            Si vous n'ête pas connécté renvoie vers la page eleves
+            Si vous êtes connecté contient la liste des élèves avec le nom et prenom des élèves dans des labels
+            pour pouvoir les modifier on peut ensuite valider la modification en appuyant sur le boutton Modifier
+            à côté de chaque élèves.
+            Et il y a boutton retour qui renvoir vers la page eleves.
+            */
+            if(req.session().attribute("lastname")== null)
             {
-                req.session(true);
-                req.session().attribute("firstname", firstname);
-                req.session().attribute("lastname" , lastname );
-                req.session().attribute("id"       , id       );
-                res.redirect("/");
+                res.redirect("/eleves");
+                return null;
+            }else{
+                return ModifyUserGUI.getAllEleves();
+            }
+        });
+
+        get("/eleveGommette", (req, res) -> {
+            /*
+            Contient la liste des gommettes d'un élèves avec leurs motif d'ajout, la date d'ajout et le nom du professeur qui la ajouter
+            Si vous êtes connécté un boutton supprimer à côté des gommettes pour retirer la gommette à l'élève,
+            une selection pour choisir une gommette, un label pour mettre un motif
+            et un boutton ajouter qui si les champs sont remplis ajoutte une gommettes à l'élèves.
+            */
+            boolean isConnected = req.session().attribute("lastname") != null;
+            if(eleveSelect == null){
+                res.redirect("/eleves");
+                return null;
+            }else{
+                Eleve eleve = Core.getEleve(eleveSelect);
+                return GommetteGUI.getAllEleveGommettes(eleve, isConnected);
+            }
+        });
+
+        //----  Definig posts  ----//
+        post("/", (req, res) -> {
+            String connexion = req.queryParams("Connexion");
+            String eleves  = req.queryParams("Eleves");
+            if(connexion != null){
+                res.redirect("/login");
+            }
+            else if(eleves != null){
+                res.redirect("/eleves");
             }
             else{
-                res.redirect("/login");
+                res.redirect("/gommettes");
+            }
+            res.redirect("/");
+            return null;
+        });
+
+
+        post("/login", (req, res) -> {
+            String connexion = req.queryParams("connexion");
+            if(connexion != null){
+                String firstname = req.queryParams("firstname");
+                String lastname  = req.queryParams("lastname");
+                String password  = req.queryParams("password");
+                int id = Core.checkLogin(lastname, firstname, password);
+                if (id > -1)
+                {
+                    req.session(true);
+                    req.session().attribute("firstname", firstname);
+                    req.session().attribute("lastname" , lastname );
+                    req.session().attribute("id"       , id       );
+                    res.redirect("/");
+                }
+                else{
+                    res.redirect("/login");
+                }
+            }else{
+                res.redirect("/");
             }
             return null;
         });
@@ -44,23 +155,29 @@ public class StartServer {
             String id = req.queryParams("delete");
             String gommette = req.queryParams("gommettes");
             String add = req.queryParams("add");
+            String modif = req.queryParams("modif");
             if(id != null){
                 id = removeSpaces(id);
-                UserCore.deleteEleve(id);
+                Core.deleteEleve(id);
             }
             else if(gommette != null){
-                res.redirect("/eleveGommette/"+gommette);
+                gommette = removeSpaces(gommette);
+                eleveSelect = gommette;
+                res.redirect("/eleveGommette");
             }
             else if(add != null){
                 String firstName = req.queryParams("firstname");
                 String lastName = req.queryParams("lastname");
-                if(firstName != "" && lastName != "")
+                if(!firstName.equals("") && !lastName.equals(""))
                 {
-                    UserCore.addEleve(firstName, lastName);
+                    Core.addEleve(firstName, lastName);
                 }
             }
-            else{
+            else if(modif != null){
                 res.redirect("/elevesModif");
+            }
+            else{
+                res.redirect("/");
             }
             res.redirect("/eleves");
             return null;
@@ -73,9 +190,9 @@ public class StartServer {
                 String firstName = req.queryParams("firstname-"+id);
                 String lastName = req.queryParams("lastname-"+id);     
                 id = removeSpaces(id);
-                if(firstName != null && lastName != null)
+                if(!firstName.equals("") && !lastName.equals(""))
                 {
-                    UserCore.updateEleve(id, firstName, lastName);
+                    Core.updateEleve(id, firstName, lastName);
                 }
             } else{
                 res.redirect("/eleves");
@@ -84,81 +201,49 @@ public class StartServer {
             return null;
         });
 
-        get("/login", (req, res) -> {
-            return ConexionGui.login();
-        });
-
-        get("/eleves", (req, res) -> {
-            if(req.session().attribute("lastname")== null)
-            {
-                res.redirect("/login");
-                return null;
-            }else{
-                return UserGUI.getAllEleves();
+        post("/eleveGommette", (req, res) -> {
+            String add              = req.queryParams("add");
+            String idEleveGommette  = req.queryParams("delete");
+            String idEleve          = eleveSelect;
+            if(add != null){
+                String idGommette = req.queryParams("gommette");
+                String motif = req.queryParams("motif");
+                if(!motif.equals(""))
+                {
+                    String idProf = req.session().attribute("id") + "";
+                    Core.addEleveGommette(idEleve, idProf, idGommette, motif);
+                }
             }
-        });
-
-        get("/profs", (req, res) -> {
-            return ProfGUI.getAllProfesseurs();
-        });
-
-        get("/", (req, res) -> {
-            if(req.session().attribute("lastname")== null)
-            {
-                res.redirect("/login");
-            }else{
+            else if(idEleveGommette != null){
+                Core.deleteEleveGommette(idEleveGommette);
+            }
+            else{
                 res.redirect("/eleves");
             }
+            res.redirect("/eleveGommette");
             return null;
         });
 
-        get("/elevesModif", (req, res) -> {
-            if(req.session().attribute("lastname")== null)
-            {
-                res.redirect("/login");
-                return null;
-            }else{
-                return ModifyUserGUI.getAllEleves();
-            }
-        });
-
-        ArrayList<Eleve> eleves = UserCore.getAllEleves();
-        for(Eleve eleve : eleves){
-            String page = "/eleveGommette/" + eleve.getFirstName() + "-" + eleve.getLastName();
-            get(page, (req, res) -> {
-                if(req.session().attribute("lastname") == null)
+        post("/gommettes", (req, res) -> {
+            String add = req.queryParams("add");
+            String idGommette  = req.queryParams("delete");
+            if(add != null){
+                String couleur     = req.queryParams("couleur");
+                String description = req.queryParams("description");
+                if(!couleur.equals("") && !description.equals(""))
                 {
-                    res.redirect("/login");
-                    return null;
-                }else{
-                    return GommetteGUI.getAllEleveGommettes(eleve);
+                    Core.addGommette(couleur, description);
                 }
-            });
-
-            post(page, (req, res) -> {
-                String add = req.queryParams("add");
-                String idGommette  = req.queryParams("delete");
-                if(add != null){
-                    String couleur     = req.queryParams("couleur");
-                    String description = req.queryParams("description");
-                    String motif       = req.queryParams("motif");
-                    if(couleur != "" && description != "" && motif != "")
-                    {
-                        int id = req.session().attribute("id");
-                        UserCore.addGommette(eleve, couleur, description, motif, id);
-                    }
-                }
-                else if(idGommette != null){
-                    UserCore.deleteGommette(idGommette);
-                }
-                else{
-                    res.redirect("/eleves");
-                }
-                res.redirect(page);
-                return null;
-            });
-        }
-
+            }
+            else if(idGommette != null){
+                Core.deleteGommette(idGommette);
+            }
+            else{
+                res.redirect("/");
+            }
+            res.redirect("/gommettes");
+            return null;
+        });
     }
 
     private static String removeSpaces(String str){

@@ -1,6 +1,6 @@
 package com.uca.gui;
 
-import com.uca.core.UserCore;
+import com.uca.core.Core;
 import com.uca.entity.Eleve;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -15,20 +15,37 @@ import java.util.Map;
 
 public class GommetteGUI {
     
-    public static String getAllEleveGommettes(Eleve eleve) throws IOException, TemplateException {
+    public static String getAllGommettes(boolean connexion) throws IOException, TemplateException {
         Configuration configuration = _FreeMarkerInitializer.getContext();
 
         Map<String, Object> input = new HashMap<>();
 
-        input.put("gommettes", UserCore.getAllEleveGommettes(eleve));
+        input.put("gommettes", Core.getAllGommettes());
+        input.put("connexion", connexion ? 1 : 0);
+
+        Writer output = new StringWriter();
+        Template template = configuration.getTemplate("users/gommettes.ftl");
+        template.setOutputEncoding("UTF-8");
+        template.process(input, output);
+
+        return output.toString();
+    }
+
+
+    public static String getAllEleveGommettes(Eleve eleve, boolean connexion) throws IOException, TemplateException {
+        Configuration configuration = _FreeMarkerInitializer.getContext();
+
+        Map<String, Object> input = new HashMap<>();
+        input.put("gommettesEleve", Core.getAllEleveGommettes(eleve));
+        input.put("gommettes", Core.getAllGommettes());
         input.put("firstname", eleve.getFirstName());
         input.put("lastname", eleve.getLastName());
+        input.put("connexion", connexion ? 1 : 0);
 
         Writer output = new StringWriter();
         Template template = configuration.getTemplate("users/userGommette.ftl");
         template.setOutputEncoding("UTF-8");
         template.process(input, output);
-
         return output.toString();
     }
 }

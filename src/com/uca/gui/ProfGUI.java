@@ -1,6 +1,6 @@
 package com.uca.gui;
 
-import com.uca.core.UserCore;
+import com.uca.core.Core;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -18,7 +18,7 @@ public class ProfGUI {
 
         Map<String, Object> input = new HashMap<>();
 
-        input.put("users", UserCore.getAllProfesseurs());
+        input.put("users", Core.getAllProfesseurs());
 
         Writer output = new StringWriter();
         Template template = configuration.getTemplate("users/proff.ftl");

@@ -7,18 +7,31 @@ import com.uca.dao.*;
 public class Gommette {
     private String couleur;
     private String description;
+    private int id;
+
+    //---- Appartient à eleveGommette mais est ici pour l'affichage ----//
     private String motif;
     private String date;
-    private int id;
+    private String lastNameProf;
+    private int idEleveGommette;
 
     public Gommette(){}
 
-    public Gommette(int id, String couleur, String description, String motif, String date){
+    public Gommette(int id, String couleur, String description){
+        setCouleur(couleur);
+        setDescription(description);
+        setId(id);
+    }
+
+
+    public Gommette(int id, int idEleveGommette, String couleur, String description, String motif, String date, String lastNameProf){
         setCouleur(couleur);
         setDescription(description);
         setId(id);
         setMotif(motif);
         setDate(date);
+        setIdEleveGommette(idEleveGommette);
+        setLastNameProf(lastNameProf);
     }
 
     public void setCouleur(String couleur){
@@ -41,6 +54,16 @@ public class Gommette {
         this.date = date;
     }
 
+    public void setIdEleveGommette(int idEleveGommette)
+    {
+        this.idEleveGommette = idEleveGommette;
+    }
+
+    public void setLastNameProf(String lastNameProf)
+    {
+        this.lastNameProf = lastNameProf;
+    }
+
     public String getCouleur(){
         return this.couleur;
     }
@@ -50,31 +73,23 @@ public class Gommette {
     }
 
     public int getId() {
-        return id;
+        return this.id;
+    }
+
+    public int getIdEleveGommette(){
+        return this.idEleveGommette;
     }
 
     public String getMotif(){
-        return motif;
+        return this.motif;
     }
 
     public String getDate(){
-        return date;
+        return this.date;
     }
 
-    public void add(){
-        /*
-        Connection connection = _Connector.getInstance();
-        try {
-            PreparedStatement statement;
-            statement = connection.prepareStatement("INSERT INTO gommette(id, couleur, description) VALUES(?, ?, ?);");
-            statement.setInt(1, this.id);
-            statement.setString(2, this.couleur == Couleur.BLANC ? "Blanc" : "Rouge");
-            statement.setString(3, this.description);
-            statement.executeUpdate();
-        } catch (Exception e){
-            System.out.println(e.toString());
-            throw new RuntimeException("could not insert gommette !");
-        }*/
+    public String getLastNameProf(){
+        return this.lastNameProf;
     }
 
 }

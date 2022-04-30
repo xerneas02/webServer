@@ -31,7 +31,7 @@ public class _Initializer {
                                                                                             "idEleve int,"+
                                                                                             "idProf int,"+
                                                                                             "idGommette int,"+
-                                                                                            "PRIMARY KEY (idEleve, idProf, idGommette),"+
+                                                                                            "PRIMARY KEY (id),"+
                                                                                             "FOREIGN KEY (idEleve) REFERENCES eleve (id),"+
                                                                                             "FOREIGN KEY (idProf) REFERENCES professeur (id),"+
                                                                                             "FOREIGN KEY (idGommette) REFERENCES gommette (id),"+
