@@ -4,6 +4,7 @@ import com.uca.entity.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class UserDAO extends _Generic<Eleve> {
     
@@ -32,14 +33,16 @@ public class UserDAO extends _Generic<Eleve> {
         ArrayList<Gommette> entities = new ArrayList<>();
         try {
             
-            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM gommette INNER JOIN eleveGommette WHERE idEleve = ? ORDER BY id ASC;");
+            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT g.id id, g.couleur couleur, g.description description, eg.motif motif, eg.date date FROM gommette g INNER JOIN eleveGommette eg WHERE eg.idGommette = g.id AND eg.idEleve = ? ORDER BY id ASC;");
             preparedStatement.setInt(1, eleve.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int id  = resultSet.getInt("id");
                 String couleur = resultSet.getString("couleur");
                 String description = resultSet.getString("description");
-                Gommette gommette = new Gommette(id, couleur, description);
+                String motif  = resultSet.getString("motif");
+                String date  = resultSet.getString("date");
+                Gommette gommette = new Gommette(id, couleur, description, motif, date);
 
                 entities.add(gommette);
             }
@@ -114,13 +117,15 @@ public class UserDAO extends _Generic<Eleve> {
         }
     }
 
-    public Professeur getProfesseur(String name) {
+    public Professeur getProfesseur(String lastname, String firstname) {
         try {
             Professeur result = new Professeur();
-            PreparedStatement statement = this.connect.prepareStatement("SELECT * FROM professeur WHERE lastname = ? ;");
-            statement.setString(1, name);
+            PreparedStatement statement = this.connect.prepareStatement("SELECT * FROM professeur WHERE lastname = ? AND firstname = ? ;");
+            statement.setString(1, lastname);
+            statement.setString(2, firstname);
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
+                result.setId(rs.getInt("id"));
                 result.setFirstName(rs.getString("firstname"));
                 result.setLastName(rs.getString("lastname"));
                 result.setMdp(rs.getString("mdp"));
@@ -137,6 +142,53 @@ public class UserDAO extends _Generic<Eleve> {
         
     }
 
+    public void addGommette(Eleve eleve, String couleur, String description, String motif, int id) {
+        try {
+            PreparedStatement statement;
+            statement = this.connect.prepareStatement("INSERT INTO gommette(couleur, description) VALUES(?, ?);");
+            statement.setString(1, couleur    );
+            statement.setString(2, description);
+            statement.executeUpdate();
+
+            statement = this.connect.prepareStatement("SELECT MAX(id) id FROM gommette WHERE couleur = ? AND description = ?;");
+            statement.setString(1, couleur    );
+            statement.setString(2, description);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            int idGommette = resultSet.getInt("id");
+            LocalDate date = LocalDate.now();
+
+            statement = this.connect.prepareStatement("INSERT INTO eleveGommette(idEleve, idProf, idGommette, motif, date) VALUES(?, ?, ?, ?, ?);");
+            statement.setInt(1, eleve.getId());
+            statement.setInt(2, id);
+            statement.setInt(3, idGommette);
+            statement.setString(4, motif);
+            statement.setString(5, date.toString());
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println("could not insert gommette !\n" + e.toString());
+            throw new RuntimeException("could not insert gommette !");
+        }
+    }
+
+    public void deleteGommette(String id) {
+        try {
+            PreparedStatement statement;
+            statement = this.connect.prepareStatement("DELETE FROM eleveGommette WHERE idGommette = ?;");
+            statement.setString(1, id);
+            statement.executeUpdate();
+
+            statement = this.connect.prepareStatement("DELETE FROM gommette WHERE id = ?;");
+            statement.setString(1, id);
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e.toString());
+            throw new RuntimeException("could not delete gommette !");
+        }
+    }    
+
+
+
     @Override
     public Eleve create(Eleve obj) {
         try {
@@ -152,6 +204,8 @@ public class UserDAO extends _Generic<Eleve> {
         
         return obj;
     }
+
+    
 
     public void create(String firstname, String lastname) {
         try {

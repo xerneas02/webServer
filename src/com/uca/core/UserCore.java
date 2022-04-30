@@ -19,9 +19,20 @@ public class UserCore {
         return new UserDAO().getAllProfesseurs();
     }
 
-    public static boolean checkLogin(String name, String password) {
-        Professeur test = new UserDAO().getProfesseur(name);
-        return test != null && test.getMdp().equals(password);
+    public static int checkLogin(String lastname, String firstname, String password) {
+        Professeur test = new UserDAO().getProfesseur(lastname, firstname);
+        if(test != null && test.getMdp().equals(password)){
+            return test.getId();
+        }
+        return -1;
+    }
+
+    public static void addGommette(Eleve eleve, String couleur, String description, String motif, int id){
+        new UserDAO().addGommette(eleve, couleur, description, motif, id);
+    }
+
+    public static void deleteGommette(String id){
+        new UserDAO().deleteGommette(id);
     }
 
     public static void deleteEleve(String id){

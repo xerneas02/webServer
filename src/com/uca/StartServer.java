@@ -21,12 +21,17 @@ public class StartServer {
         //Defining our routes
         
         post("/login", (req, res) -> {
-            String name = req.queryParams("name");
-            String password = req.queryParams("password");
-            if (UserCore.checkLogin(name, password))
+            String firstname = req.queryParams("firstname");
+            String lastname  = req.queryParams("lastname");
+            String password  = req.queryParams("password");
+            int id = UserCore.checkLogin(lastname, firstname, password);
+            System.out.println(id);
+            if (id > -1)
             {
                 req.session(true);
-                req.session().attribute("name", name);
+                req.session().attribute("firstname", firstname);
+                req.session().attribute("lastname" , lastname );
+                req.session().attribute("id"       , id       );
                 res.redirect("/");
             }
             else{
@@ -37,7 +42,7 @@ public class StartServer {
 
 
         post("/eleves", (req, res) -> {
-            String id = req.queryParams("delet");
+            String id = req.queryParams("delete");
             String gommette = req.queryParams("gommettes");
             String add = req.queryParams("add");
             if(id != null){
@@ -50,7 +55,7 @@ public class StartServer {
             else if(add != null){
                 String firstName = req.queryParams("firstname");
                 String lastName = req.queryParams("lastname");
-                if(firstName != null && lastName != null)
+                if(firstName != "" && lastName != "")
                 {
                     UserCore.addEleve(firstName, lastName);
                 }
@@ -86,7 +91,7 @@ public class StartServer {
         });
 
         get("/eleves", (req, res) -> {
-            if(req.session().attribute("name")== null)
+            if(req.session().attribute("lastname")== null)
             {
                 res.redirect("/login");
                 return null;
@@ -100,7 +105,7 @@ public class StartServer {
         });
 
         get("/", (req, res) -> {
-            if(req.session().attribute("name")== null)
+            if(req.session().attribute("lastname")== null)
             {
                 res.redirect("/login");
             }else{
@@ -110,7 +115,7 @@ public class StartServer {
         });
 
         get("/elevesModif", (req, res) -> {
-            if(req.session().attribute("name")== null)
+            if(req.session().attribute("lastname")== null)
             {
                 res.redirect("/login");
                 return null;
@@ -121,15 +126,41 @@ public class StartServer {
 
         ArrayList<Eleve> eleves = UserCore.getAllEleves();
         for(Eleve eleve : eleves){
-            get("/eleveGommette/" + eleve.getFirstName() + "-" + eleve.getLastName(), (req, res) -> {
-                System.out.println("/eleveGommette/" + eleve.getFirstName() + "-" + eleve.getLastName());
-                if(req.session().attribute("name")== null)
+            String page = "/eleveGommette/" + eleve.getFirstName() + "-" + eleve.getLastName();
+            get(page, (req, res) -> {
+                if(req.session().attribute("lastname") == null)
                 {
                     res.redirect("/login");
                     return null;
                 }else{
                     return GommetteGUI.getAllEleveGommettes(eleve);
                 }
+            });
+
+            post(page, (req, res) -> {
+                String add = req.queryParams("add");
+                String idGommette  = req.queryParams("delete");
+                System.out.println(add);
+                if(add != null){
+                    String couleur     = req.queryParams("couleur");
+                    String description = req.queryParams("description");
+                    String motif       = req.queryParams("motif");
+                    System.out.println(couleur + " " + description + " " + motif);
+                    if(couleur != "" && description != "" && motif != "")
+                    {
+                        int id = req.session().attribute("id");
+                        System.out.println(id);
+                        UserCore.addGommette(eleve, couleur, description, motif, id);
+                    }
+                }
+                else if(idGommette != null){
+                    UserCore.deleteGommette(idGommette);
+                }
+                else{
+                    res.redirect("/eleves");
+                }
+                res.redirect(page);
+                return null;
             });
         }
 

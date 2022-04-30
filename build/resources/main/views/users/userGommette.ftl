@@ -5,8 +5,18 @@
     <ul>
         <form action="/eleveGommette/${firstname}-${lastname}" method="post">
         <#list gommettes as gommette>
-            <li>${gommette.id} - ${gommette.couleur} ${user.description} <button type="submit" value="${gommette.id}" name="delet">Suprimmer</button> </li>
+            <li>${gommette.id} - ${gommette.couleur} - ${gommette.description} - ${gommette.motif} - ${gommette.date} <button type="submit" value="${gommette.id}" name="delete">Suprimmer</button> </li>
         </#list>
+        
+        <select name="couleur">
+            <option value="Blanc">Blanc</option>
+            <option value="Rouge">Rouge</option>
+        </select>
+        <input type="text" name="description" placeholder="Description">
+        <input type="text" name="motif" placeholder="Motif">
+        <button type="submit" value="add" name="add">Ajouter</button>
+        <button type="submit" value="back" name="back">Retour</button>
+
         </form>
     </ul>
 

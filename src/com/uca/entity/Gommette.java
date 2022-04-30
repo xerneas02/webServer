@@ -7,14 +7,18 @@ import com.uca.dao.*;
 public class Gommette {
     private String couleur;
     private String description;
+    private String motif;
+    private String date;
     private int id;
 
     public Gommette(){}
 
-    public Gommette(int id, String couleur, String description){
+    public Gommette(int id, String couleur, String description, String motif, String date){
         setCouleur(couleur);
         setDescription(description);
         setId(id);
+        setMotif(motif);
+        setDate(date);
     }
 
     public void setCouleur(String couleur){
@@ -29,6 +33,14 @@ public class Gommette {
         this.id = id;
     }
 
+    public void setMotif(String motif){
+        this.motif = motif;
+    }
+
+    public void setDate(String date){
+        this.date = date;
+    }
+
     public String getCouleur(){
         return this.couleur;
     }
@@ -39,6 +51,14 @@ public class Gommette {
 
     public int getId() {
         return id;
+    }
+
+    public String getMotif(){
+        return motif;
+    }
+
+    public String getDate(){
+        return date;
     }
 
     public void add(){

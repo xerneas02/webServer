@@ -4,7 +4,8 @@
 
 <ul>
     <form action="/login" method="post">
-        <input type="text" name="name" placeholder="Nom">
+        <input type="text" name="firstname" placeholder="Prenom">
+        <input type="text" name="lastname" placeholder="Nom">
         <input type="password" name="password" placeholder="Mot de passe">
         <button type="submit">Connection</button>
     </form>
