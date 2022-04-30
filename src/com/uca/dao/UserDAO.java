@@ -28,6 +28,28 @@ public class UserDAO extends _Generic<Eleve> {
         return entities;
     }
 
+    public ArrayList<Gommette> getAllEleveGommettes(Eleve eleve) {
+        ArrayList<Gommette> entities = new ArrayList<>();
+        try {
+            
+            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM gommette INNER JOIN eleveGommette WHERE idEleve = ? ORDER BY id ASC;");
+            preparedStatement.setInt(1, eleve.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id  = resultSet.getInt("id");
+                String couleur = resultSet.getString("couleur");
+                String description = resultSet.getString("description");
+                Gommette gommette = new Gommette(id, couleur, description);
+
+                entities.add(gommette);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return entities;
+    }
+
     public ArrayList<Professeur> getAllProfesseurs() {
         ArrayList<Professeur> entities = new ArrayList<>();
         try {
@@ -48,6 +70,24 @@ public class UserDAO extends _Generic<Eleve> {
         }
 
         return entities;
+    }
+
+    public void update(String id, String firstName, String lastName){
+        try {
+            PreparedStatement statement;
+            statement = this.connect.prepareStatement("UPDATE eleve SET firstname = ? WHERE id = ?;");
+            statement.setString(1, firstName);
+            statement.setString(2, id);
+            statement.executeUpdate();
+
+            statement = this.connect.prepareStatement("UPDATE eleve SET lastname = ? WHERE id = ?;");
+            statement.setString(1, lastName);
+            statement.setString(2, id);
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e.toString());
+            throw new RuntimeException("could not modified eleve !");
+        }
     }
 
     public void updateFirstName(Eleve obj, String firstName){

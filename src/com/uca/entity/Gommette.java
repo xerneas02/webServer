@@ -1,24 +1,23 @@
 package com.uca.entity;
 
-import com.uca.type.Couleur;
 import java.sql.*;
 import com.uca.dao.*;
 
 
 public class Gommette {
-    private Couleur couleur;
+    private String couleur;
     private String description;
     private int id;
 
     public Gommette(){}
 
-    public Gommette(Couleur couleur, String description, int id){
+    public Gommette(int id, String couleur, String description){
         setCouleur(couleur);
         setDescription(description);
         setId(id);
     }
 
-    public void setCouleur(Couleur couleur){
+    public void setCouleur(String couleur){
         this.couleur = couleur;
     }
 
@@ -30,7 +29,7 @@ public class Gommette {
         this.id = id;
     }
 
-    public Couleur getCouleur(){
+    public String getCouleur(){
         return this.couleur;
     }
 
@@ -43,6 +42,7 @@ public class Gommette {
     }
 
     public void add(){
+        /*
         Connection connection = _Connector.getInstance();
         try {
             PreparedStatement statement;
@@ -54,7 +54,7 @@ public class Gommette {
         } catch (Exception e){
             System.out.println(e.toString());
             throw new RuntimeException("could not insert gommette !");
-        }
+        }*/
     }
 
 }

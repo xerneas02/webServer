@@ -6,7 +6,7 @@
     <form action="/login" method="post">
         <input type="text" name="name" placeholder="Nom">
         <input type="password" name="password" placeholder="Mot de passe">
-        <button type="submit">Submit</button>
+        <button type="submit">Connection</button>
     </form>
 </ul>
 
