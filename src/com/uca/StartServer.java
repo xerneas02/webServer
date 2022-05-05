@@ -91,7 +91,7 @@ public class StartServer {
             }
         });
 
-        get("/eleveGommette", (req, res) -> {
+        get("/eleveGommettes", (req, res) -> {
             /*
             Contient la liste des gommettes d'un élèves avec leurs motif d'ajout, la date d'ajout et le nom du professeur qui la ajouter
             Si vous êtes connécté un boutton supprimer à côté des gommettes pour retirer la gommette à l'élève,
@@ -105,6 +105,23 @@ public class StartServer {
             }else{
                 Eleve eleve = EleveCore.getEleve(eleveSelect);
                 return GommetteGUI.getAllEleveGommettes(eleve, isConnected);
+            }
+        });
+
+        get("/eleveGommettesModif", (req, res) -> {
+            /*
+            Contient la liste des gommettes d'un élèves avec leurs motif d'ajout, la date d'ajout et le nom du professeur qui la ajouter
+            Si vous êtes connécté un boutton supprimer à côté des gommettes pour retirer la gommette à l'élève,
+            une selection pour choisir une gommette, un label pour mettre un motif
+            et un boutton ajouter qui si les champs sont remplis ajoutte une gommettes à l'élèves.
+            */
+            boolean isConnected = req.session().attribute("lastname") != null;
+            if(eleveSelect == null){
+                res.redirect("/eleves");
+                return null;
+            }else{
+                Eleve eleve = EleveCore.getEleve(eleveSelect);
+                return ModifyEleveGommetteGUI.getAllEleveGommettes(eleve);
             }
         });
 
@@ -182,7 +199,7 @@ public class StartServer {
             else if(gommette != null){
                 gommette = removeSpaces(gommette);
                 eleveSelect = gommette;
-                res.redirect("/eleveGommette");
+                res.redirect("/eleveGommettes");
             }
             else if(add != null){
                 String firstName = req.queryParams("firstname");
@@ -213,33 +230,38 @@ public class StartServer {
                 {
                     EleveCore.updateEleve(id, firstName, lastName);
                 }
-            } else{
+            }else{
                 res.redirect("/eleves");
             }
             res.redirect("/elevesModif");
             return null;
         });
 
-        post("/eleveGommette", (req, res) -> {
+        post("/eleveGommettes", (req, res) -> {
             String add              = req.queryParams("add");
             String idEleveGommette  = req.queryParams("delete");
+            String modif            = req.queryParams("modif");
             String idEleve          = eleveSelect;
             if(add != null){
                 String idGommette = req.queryParams("gommette");
-                String motif = req.queryParams("motif");
-                if(!motif.equals(""))
+                String motif      = req.queryParams("motif");
+                String date       = req.queryParams("date");
+                if(!motif.equals("") && !date.equals(""))
                 {
                     String idProf = req.session().attribute("id") + "";
-                    EleveGommetteCore.addEleveGommette(idEleve, idProf, idGommette, motif);
+                    EleveGommetteCore.addEleveGommette(idEleve, idProf, idGommette, motif, date);
                 }
             }
             else if(idEleveGommette != null){
                 EleveGommetteCore.deleteEleveGommette(idEleveGommette);
             }
+            else if(modif != null){
+                res.redirect("/eleveGommettesModif");
+            }
             else{
                 res.redirect("/eleves");
             }
-            res.redirect("/eleveGommette");
+            res.redirect("/eleveGommettes");
             return null;
         });
 
@@ -282,6 +304,24 @@ public class StartServer {
                 res.redirect("/gommettes");
             }
             res.redirect("/gommettesModif");
+            return null;
+        });
+
+        post("/eleveGommettesModif", (req, res) -> {
+            String id = req.queryParams("modif");
+            if(id != null){
+                String modif = req.queryParams("motif-"+id);
+                String date  = req.queryParams( "date-"+id);    
+                id = removeSpaces(id);
+                System.out.println(modif + " " + date);
+                if(!modif.equals("") && !date.equals(""))
+                {   
+                    EleveGommetteCore.updateEleveGommette(id, modif, date);
+                }
+            } else{
+                res.redirect("/eleveGommettes");
+            }
+            res.redirect("/eleveGommettesModif");
             return null;
         });
     }

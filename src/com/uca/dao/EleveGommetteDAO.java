@@ -41,15 +41,14 @@ public class EleveGommetteDAO {
         return entities;
     }
 
-    public void create(String idEleve, String idProf, String idGommette, String motif) {
+    public void create(String idEleve, String idProf, String idGommette, String motif, String date) {
         try {
-            LocalDate date = LocalDate.now();
             PreparedStatement statement = this.connect.prepareStatement("INSERT INTO eleveGommette(idEleve, idProf, idGommette, motif, date) VALUES(?, ?, ?, ?, ?);");
             statement.setString(1, idEleve);
             statement.setString(2, idProf);
             statement.setString(3, idGommette);
             statement.setString(4, motif);
-            statement.setString(5, date.toString());
+            statement.setString(5, date);
             statement.executeUpdate();
         } catch (Exception e){
             System.out.println("could not insert gommette link !\n" + e.toString());
@@ -67,5 +66,23 @@ public class EleveGommetteDAO {
             System.out.println(e.toString());
             throw new RuntimeException("could not delete gommette !");
         }
-    }  
+    } 
+    
+    public void update(String id, String motif, String date){
+        try {
+            PreparedStatement statement;
+            statement = this.connect.prepareStatement("UPDATE eleveGommette SET motif = ? WHERE id = ?;");
+            statement.setString(1, motif);
+            statement.setString(2, id);
+            statement.executeUpdate();
+
+            statement = this.connect.prepareStatement("UPDATE eleveGommette SET date = ? WHERE id = ?;");
+            statement.setString(1, date);
+            statement.setString(2, id);
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e.toString());
+            throw new RuntimeException("could not modified eleveGommette !");
+        }
+    }
 }
