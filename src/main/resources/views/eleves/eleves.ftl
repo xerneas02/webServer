@@ -8,7 +8,7 @@
             <li>
                 ${eleve.id} - ${eleve.firstName} ${eleve.lastName}
                 <#if connexion == 1>
-                    <button type="submit" value="${eleve.id}" name="delete">Suprimmer</button> 
+                    <button type="submit" value="${eleve.id}" name="delete">Suprimmer</button>
                 </#if>
                 <button type="submit" value="${eleve.id}" name="gommettes">Gommettes</button> 
             </li>
