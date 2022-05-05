@@ -1,6 +1,8 @@
 package com.uca.dao;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.Set;
 
 import com.uca.entity.*;
 
@@ -13,8 +15,22 @@ public class _Initializer {
             PreparedStatement statement;
 
             //Init articles table
+            /*
+            statement = connection.prepareStatement("DROP TABLE eleveGommette ;");
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("DROP TABLE eleve ;");
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("DROP TABLE gommette ;");
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("DROP TABLE professeur ;");
+            statement.executeUpdate();*/
 
             //Eleve
+            
+
             statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS eleve (id int primary key auto_increment, firstname varchar(100), lastname varchar(100));");
             statement.executeUpdate();
 
@@ -41,12 +57,14 @@ public class _Initializer {
 
             //Todo Remove me !
             /*Professeur prof = new Professeur(1, "Professeur", "Random", "Mdp");
-            prof.addEleve("Thomas", "Dupois");
+            prof.addEleve("Thomas", "Dupois");*/
+            //*
             statement = connection.prepareStatement("INSERT INTO professeur(firstname, lastname, mdp) VALUES(?, ?, ?);");
-            statement.setString(1, "mathis");
-            statement.setString(2, "roubille");
+            statement.setString(1, "Mamadou");
+            statement.setString(2, "Kante");
             statement.setString(3, "1234");
-            statement.executeUpdate();*/
+            statement.executeUpdate();
+            //*/
 
         } catch (Exception e){
             System.out.println(e.toString());

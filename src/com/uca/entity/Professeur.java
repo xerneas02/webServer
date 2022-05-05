@@ -3,17 +3,20 @@ package com.uca.entity;
 import java.sql.*;
 import com.uca.dao.*;
 
-public class Professeur extends Entity{
+public class Professeur{
     private String mdp;
-    public Professeur(){
-        super();
-    }
+    private String firstName;
+    private String lastName;
+    private int id;
+
+    public Professeur(){}
 
     public Professeur(int id, String firstName, String lastName, String mdp){
-        super(id, firstName, lastName);
+        setId(id);
+        setFirstName(firstName);
+        setLastName(lastName);
         setMdp(mdp);
     }
-
 
     public void setMdp(String mdp) {
         this.mdp = mdp;
@@ -21,5 +24,29 @@ public class Professeur extends Entity{
 
     public String getMdp() {
         return mdp;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

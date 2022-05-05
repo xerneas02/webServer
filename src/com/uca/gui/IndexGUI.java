@@ -1,6 +1,6 @@
 package com.uca.gui;
 
-import com.uca.core.Core;
+import com.uca.core.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
