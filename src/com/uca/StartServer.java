@@ -1,6 +1,6 @@
 package com.uca;
 
-import com.uca.core.Core;
+import com.uca.core.*;
 import com.uca.dao._Initializer;
 import com.uca.gui.*;
 import com.uca.entity.*;
@@ -58,7 +58,7 @@ public class StartServer {
                 -Modifier qui renvoie vers la page eleveModif
             */
             boolean isConnected = req.session().attribute("lastname") != null;
-            return UserGUI.getAllEleves(isConnected);
+            return EleveGUI.getAllEleves(isConnected);
         });
 
         get("/gommettes", (req, res) -> {
@@ -87,11 +87,11 @@ public class StartServer {
                 res.redirect("/eleves");
                 return null;
             }else{
-                return ModifyUserGUI.getAllEleves();
+                return ModifyEleveGUI.getAllEleves();
             }
         });
 
-        get("/eleveGommette", (req, res) -> {
+        get("/eleveGommettes", (req, res) -> {
             /*
             Contient la liste des gommettes d'un élèves avec leurs motif d'ajout, la date d'ajout et le nom du professeur qui la ajouter
             Si vous êtes connécté un boutton supprimer à côté des gommettes pour retirer la gommette à l'élève,
@@ -103,12 +103,46 @@ public class StartServer {
                 res.redirect("/eleves");
                 return null;
             }else{
-                Eleve eleve = Core.getEleve(eleveSelect);
+                Eleve eleve = EleveCore.getEleve(eleveSelect);
                 return GommetteGUI.getAllEleveGommettes(eleve, isConnected);
             }
         });
 
-        //----  Defining posts  ----//
+        get("/eleveGommettesModif", (req, res) -> {
+            /*
+            Contient la liste des gommettes d'un élèves avec leurs motif d'ajout, la date d'ajout et le nom du professeur qui la ajouter
+            Si vous êtes connécté un boutton supprimer à côté des gommettes pour retirer la gommette à l'élève,
+            une selection pour choisir une gommette, un label pour mettre un motif
+            et un boutton ajouter qui si les champs sont remplis ajoutte une gommettes à l'élèves.
+            */
+            boolean isConnected = req.session().attribute("lastname") != null;
+            if(eleveSelect == null){
+                res.redirect("/eleves");
+                return null;
+            }else{
+                Eleve eleve = EleveCore.getEleve(eleveSelect);
+                return ModifyEleveGommetteGUI.getAllEleveGommettes(eleve);
+            }
+        });
+
+        get("/gommettesModif", (req, res) -> {
+            /*
+            Si vous n'ête pas connécté renvoie vers la page eleves
+            Si vous êtes connecté contient la liste des élèves avec le nom et prenom des élèves dans des labels
+            pour pouvoir les modifier on peut ensuite valider la modification en appuyant sur le boutton Modifier
+            à côté de chaque élèves.
+            Et il y a boutton retour qui renvoir vers la page eleves.
+            */
+            if(req.session().attribute("lastname")== null)
+            {
+                res.redirect("/gommettes");
+                return null;
+            }else{
+                return ModifyGommetteGUI.getAllGommettes();
+            }
+        });
+
+        //----  Definig posts  ----//
         post("/", (req, res) -> {
             String connexion = req.queryParams("Connexion");
             String eleves  = req.queryParams("Eleves");
@@ -132,7 +166,7 @@ public class StartServer {
                 String firstname = req.queryParams("firstname");
                 String lastname  = req.queryParams("lastname");
                 String password  = req.queryParams("password");
-                int id = Core.checkLogin(lastname, firstname, password);
+                int id = ProfesseurCore.checkLogin(lastname, firstname, password);
                 if (id > -1)
                 {
                     req.session(true);
@@ -158,19 +192,19 @@ public class StartServer {
             String modif = req.queryParams("modif");
             if(id != null){
                 id = removeSpaces(id);
-                Core.deleteEleve(id);
+                EleveCore.deleteEleve(id);
             }
             else if(gommette != null){
                 gommette = removeSpaces(gommette);
                 eleveSelect = gommette;
-                res.redirect("/eleveGommette");
+                res.redirect("/eleveGommettes");
             }
             else if(add != null){
                 String firstName = req.queryParams("firstname");
                 String lastName = req.queryParams("lastname");
                 if(!firstName.equals("") && !lastName.equals(""))
                 {
-                    Core.addEleve(firstName, lastName);
+                    EleveCore.addEleve(firstName, lastName);
                 }
             }
             else if(modif != null){
@@ -192,56 +226,100 @@ public class StartServer {
                 id = removeSpaces(id);
                 if(!firstName.equals("") && !lastName.equals(""))
                 {
-                    Core.updateEleve(id, firstName, lastName);
+                    EleveCore.updateEleve(id, firstName, lastName);
                 }
-            } else{
+            }else{
                 res.redirect("/eleves");
             }
             res.redirect("/elevesModif");
             return null;
         });
 
-        post("/eleveGommette", (req, res) -> {
+        post("/eleveGommettes", (req, res) -> {
             String add              = req.queryParams("add");
             String idEleveGommette  = req.queryParams("delete");
+            String modif            = req.queryParams("modif");
             String idEleve          = eleveSelect;
             if(add != null){
                 String idGommette = req.queryParams("gommette");
-                String motif = req.queryParams("motif");
-                if(!motif.equals(""))
+                String motif      = req.queryParams("motif");
+                String date       = req.queryParams("date");
+                if(!motif.equals("") && !date.equals(""))
                 {
                     String idProf = req.session().attribute("id") + "";
-                    Core.addEleveGommette(idEleve, idProf, idGommette, motif);
+                    EleveGommetteCore.addEleveGommette(idEleve, idProf, idGommette, motif, date);
                 }
             }
             else if(idEleveGommette != null){
-                Core.deleteEleveGommette(idEleveGommette);
+                EleveGommetteCore.deleteEleveGommette(idEleveGommette);
+            }
+            else if(modif != null){
+                res.redirect("/eleveGommettesModif");
             }
             else{
                 res.redirect("/eleves");
             }
-            res.redirect("/eleveGommette");
+            res.redirect("/eleveGommettes");
             return null;
         });
 
         post("/gommettes", (req, res) -> {
             String add = req.queryParams("add");
             String idGommette  = req.queryParams("delete");
+            String modif = req.queryParams("modif");
             if(add != null){
                 String couleur     = req.queryParams("couleur");
                 String description = req.queryParams("description");
                 if(!couleur.equals("") && !description.equals(""))
                 {
-                    Core.addGommette(couleur, description);
+                    GommetteCore.addGommette(couleur, description);
                 }
             }
             else if(idGommette != null){
-                Core.deleteGommette(idGommette);
+                GommetteCore.deleteGommette(idGommette);
+            }
+            else if(modif != null){
+                res.redirect("/gommettesModif");
             }
             else{
                 res.redirect("/");
             }
             res.redirect("/gommettes");
+            return null;
+        });
+
+        post("/gommettesModif", (req, res) -> {
+            String id = req.queryParams("modif");
+            if(id != null){
+                String couleur = req.queryParams("couleur-"+id);
+                String description = req.queryParams("description-"+id);     
+                id = removeSpaces(id);
+                if(!couleur.equals("") && !description.equals(""))
+                {
+                    GommetteCore.updateGommette(id, couleur, description);
+                }
+            } else{
+                res.redirect("/gommettes");
+            }
+            res.redirect("/gommettesModif");
+            return null;
+        });
+
+        post("/eleveGommettesModif", (req, res) -> {
+            String id = req.queryParams("modif");
+            if(id != null){
+                String modif = req.queryParams("motif-"+id);
+                String date  = req.queryParams( "date-"+id);    
+                id = removeSpaces(id);
+                System.out.println(modif + " " + date);
+                if(!modif.equals("") && !date.equals(""))
+                {   
+                    EleveGommetteCore.updateEleveGommette(id, modif, date);
+                }
+            } else{
+                res.redirect("/eleveGommettes");
+            }
+            res.redirect("/eleveGommettesModif");
             return null;
         });
     }

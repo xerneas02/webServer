@@ -1,6 +1,6 @@
 package com.uca.gui;
 
-import com.uca.core.Core;
+import com.uca.core.*;
 import com.uca.entity.Eleve;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -20,11 +20,11 @@ public class GommetteGUI {
 
         Map<String, Object> input = new HashMap<>();
 
-        input.put("gommettes", Core.getAllGommettes());
+        input.put("gommettes", GommetteCore.getAllGommettes());
         input.put("connexion", connexion ? 1 : 0);
 
         Writer output = new StringWriter();
-        Template template = configuration.getTemplate("users/gommettes.ftl");
+        Template template = configuration.getTemplate("gommettes/gommettes.ftl");
         template.setOutputEncoding("UTF-8");
         template.process(input, output);
 
@@ -36,14 +36,14 @@ public class GommetteGUI {
         Configuration configuration = _FreeMarkerInitializer.getContext();
 
         Map<String, Object> input = new HashMap<>();
-        input.put("gommettesEleve", Core.getAllEleveGommettes(eleve));
-        input.put("gommettes", Core.getAllGommettes());
+        input.put("gommettesEleve", EleveGommetteCore.getAllEleveGommettes(eleve));
+        input.put("gommettes", GommetteCore.getAllGommettes());
         input.put("firstname", eleve.getFirstName());
         input.put("lastname", eleve.getLastName());
         input.put("connexion", connexion ? 1 : 0);
 
         Writer output = new StringWriter();
-        Template template = configuration.getTemplate("users/userGommette.ftl");
+        Template template = configuration.getTemplate("eleves/eleveGommette.ftl");
         template.setOutputEncoding("UTF-8");
         template.process(input, output);
         return output.toString();
