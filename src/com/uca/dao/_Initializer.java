@@ -40,11 +40,9 @@ public class _Initializer {
             statement.executeUpdate();
 
             //Todo Remove me !
-            /*Professeur prof = new Professeur(1, "Professeur", "Random", "Mdp");
-            prof.addEleve("Thomas", "Dupois");
-            statement = connection.prepareStatement("INSERT INTO professeur(firstname, lastname, mdp) VALUES(?, ?, ?);");
-            statement.setString(1, "mathis");
-            statement.setString(2, "roubille");
+            /*statement = connection.prepareStatement("INSERT INTO professeur(firstname, lastname, mdp) VALUES(?, ?, ?);");
+            statement.setString(1, "Thomas");
+            statement.setString(2, "Dupois");
             statement.setString(3, "1234");
             statement.executeUpdate();*/
 

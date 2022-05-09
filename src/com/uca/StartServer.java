@@ -108,7 +108,7 @@ public class StartServer {
             }
         });
 
-        //----  Definig posts  ----//
+        //----  Defining posts  ----//
         post("/", (req, res) -> {
             String connexion = req.queryParams("Connexion");
             String eleves  = req.queryParams("Eleves");
