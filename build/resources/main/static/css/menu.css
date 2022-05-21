@@ -1,0 +1,107 @@
+body
+{
+    background-color: #535353;
+    background-image: url("/img/pokemon.png");
+    background-size: 100%;
+}
+
+
+.center
+{
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: xx-large;
+    color: rgb(255, 255, 255);
+}
+
+h1
+{
+    color: white;
+}
+
+.firstBlock
+{
+    /* utilise x% de larger et y% de hauteur de la page */
+    width: 100%;
+    height: 7%;
+    /* contour plus arrondi */
+    border-radius: 10px;
+    /* L'élément est retiré du flux normal et aucun espace n'est créé pour l'élément sur la page. */
+    position: relative;
+    flex-direction: row;
+    background-color: rgb(75, 75, 75);
+    font-family: 'Arial Black', Arial, sans-serif;
+    /* Il est flexible et ses éléments enfants le sont aussi */
+    display: flex;
+    justify-content: center;
+    /* centré et à 5% du top */
+    margin-top: 0%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.secondBlock
+{
+    /* utilise x% de larger et y% de hauteur de la page */
+    width: 100%;
+    height: 100%;
+    /* L'élément est retiré du flux normal et aucun espace n'est créé pour l'élément sur la page. */
+    position: relative;
+    flex-direction: row;
+    background-color: rgb(41, 41, 41);
+    font-family: 'Arial Black', Arial, sans-serif;
+    /* Il est flexible et ses éléments enfants le sont aussi */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* FORMULAIRE */
+
+/* le formulaire est stocké dans 100% de la page formulaire (le block gris clair devant le background) */
+form 
+{
+    margin: 0 auto;
+    width: 100%;
+}
+
+input,
+textarea,
+button 
+{
+    /* Pour s'assurer que tous les champs texte ont la même police.
+	   Par défaut, les textarea ont une police monospace */
+    font: 1em sans-serif;
+    /* Pour que tous les champs texte aient la même dimension */
+    width: 100%; 
+    height: 100%;
+    box-sizing: border-box;
+    /* Pour harmoniser le look & feel des bordures des champs texte */
+    border: 1px solid rgb(153, 153, 153);
+    border-radius: 5px;
+    background-color: rgb(32, 32, 32);
+    color: antiquewhite;
+}
+
+/* --- BOUTON CONNEXION ---*/
+button {
+    /* Cette marge supplémentaire représente le même espace que celui
+    entre les étiquettes et les champs texte */
+    width: 80%;
+    margin-left: .5em;
+    background-color: #008035;
+}
+
+button:hover {
+    background-color: #004b1f;
+    cursor: pointer;
+}
+
+.linkBox a:hover 
+{
+    display: block;
+    background-color: rgb(211, 211, 211);
+    color: #00421c;
+}

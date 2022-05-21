@@ -56,18 +56,12 @@ public class _Initializer {
             statement.executeUpdate();
 
             //Todo Remove me !
-<<<<<<< HEAD
-            /*statement = connection.prepareStatement("INSERT INTO professeur(firstname, lastname, mdp) VALUES(?, ?, ?);");
-            statement.setString(1, "Thomas");
-            statement.setString(2, "Dupois");
-=======
             /*Professeur prof = new Professeur(1, "Professeur", "Random", "Mdp");
             prof.addEleve("Thomas", "Dupois");*/
             //*
             statement = connection.prepareStatement("INSERT INTO professeur(firstname, lastname, mdp) VALUES(?, ?, ?);");
             statement.setString(1, "Mamadou");
             statement.setString(2, "Kante");
->>>>>>> da267f68aeecd013287ec684980a39ac79a82127
             statement.setString(3, "1234");
             statement.executeUpdate();
             //*/

@@ -1,0 +1,249 @@
+body
+{
+    overflow-x: hidden;
+    background-image: url("../img/gommette.png");
+}
+
+/* Boc qui englobe le formulaire */
+#gommetteListe
+{
+    position:fixed;
+    left: 25%;
+    top: 25%;
+    width: 51.5%;
+    height: 50%;
+    background-color: rgba(27, 27, 27, 0.9);
+    border-radius: 10px;
+    border-color: rgb(255, 255, 255);
+    border-style: inset;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+/* sous block horizontale dans le block principal */
+.blockGommette
+{
+    position:relative;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+/* sous block horizontale dans le block principal */
+.boutonRetour
+{
+    margin-top: 10px;
+    position:relative;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.boutonRetour .boutonOption button:hover
+{
+    cursor: pointer;
+}
+
+/* block qui contient la gommette */
+.gommette
+{
+    /* Pour s'assurer que tous les champs texte ont la même police.
+	   Par défaut, les textarea ont une police monospace */
+    font: 1em sans-serif;
+    /* Pour que tous les champs texte aient la même dimension */
+    width: 60%; 
+    height: 50px;
+    box-sizing: border-box;
+    /* Pour harmoniser le look & feel des bordures des champs texte */
+    border: 1px solid rgb(153, 153, 153);
+    border-radius: 5px;
+    background-color: rgba(32, 32, 32, 0.5);
+    color: antiquewhite;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 150%;
+}
+
+/* couleur fond vert */
+.Vert
+{
+    background-color: green;
+}
+/* couleur fond blanc */
+.Blanc
+{
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
+/* couleur fond rouge */
+.Rouge
+{
+    background-color: rgb(128, 0, 0);
+}
+
+/* CASE DES OPTIONS BOUTONS COMME "modif"/"ajout"/"supprimer" */
+.boutonOption
+{
+    /* Pour s'assurer que tous les champs texte ont la même police.
+    Par défaut, les textarea ont une police monospace */
+    font: 1em sans-serif;
+    /* Pour que tous les champs texte aient la même dimension */
+    width: 20%; 
+    height: 50px;
+    box-sizing: border-box;
+    /* Pour harmoniser le look & feel des bordures des champs texte */
+    border: 1px solid rgb(153, 153, 153);
+    border-radius: 5px;
+    background-color: rgb(32, 32, 32);
+    color: antiquewhite;
+    position: relative;
+    font-size: 150%;
+}
+
+/* cible le bouton en particulier */
+.boutonOption button
+{
+    /* Pour s'assurer que tous les champs texte ont la même police.
+	   Par défaut, les textarea ont une police monospace */
+    font: 1em sans-serif;
+    /* Pour que tous les champs texte aient la même dimension */
+    width: 100%; 
+    height: 50px;
+    box-sizing: border-box;
+    /* Pour harmoniser le look & feel des bordures des champs texte */
+    border: 1px solid rgb(153, 153, 153);
+    border-radius: 5px;
+    background-color: rgb(32, 32, 32);
+    color: antiquewhite;
+}
+
+/* BOUTON SUPPRIMER */
+.boutonOption .suppr button {
+    /* Cette marge supplémentaire représente le même espace que celui
+    entre les étiquettes et les champs texte */
+    width: 100%;
+    background-color: #c30000;
+}
+
+.boutonOption .suppr button:hover {
+    background-color: #4b0000;
+    cursor: pointer;
+}
+/* BOUTON AJOUTER */
+.boutonOption .ajout button {
+    /* Cette marge supplémentaire représente le même espace que celui
+    entre les étiquettes et les champs texte */
+    width: 100%;
+    background-color: #0dc300;
+}
+
+.boutonOption .ajout button:hover {
+    background-color: #004b1f;
+    cursor: pointer;
+}
+/* BOUTON MODIFIER */
+.boutonOption .modif button {
+    /* Cette marge supplémentaire représente le même espace que celui
+    entre les étiquettes et les champs texte */
+    width: 100%;
+    background-color: #00bdc3;
+}
+
+.boutonOption .modif button:hover {
+    background-color: #007d82;
+    cursor: pointer;
+}
+
+/* BOUTON SELECTIONNER */
+.boutonOption select
+{
+    /* Pour s'assurer que tous les champs texte ont la même police.
+	   Par défaut, les textarea ont une police monospace */
+    font: 1em sans-serif;
+    /* Pour que tous les champs texte aient la même dimension */
+    width: 100%; 
+    height: 50px;
+    box-sizing: border-box;
+    /* Pour harmoniser le look & feel des bordures des champs texte */
+    border: 1px solid rgb(153, 153, 153);
+    border-radius: 5px;
+    background-color: rgb(32, 32, 32);
+    color: antiquewhite;
+}
+.boutonOption select:hover
+{
+    cursor: pointer;
+}
+
+/* BOUTON INPUT */
+.boutonOption input
+{
+    /* Pour s'assurer que tous les champs texte ont la même police.
+	   Par défaut, les textarea ont une police monospace */
+    font: 1em sans-serif;
+    /* Pour que tous les champs texte aient la même dimension */
+    width: 100%; 
+    height: 50px;
+    box-sizing: border-box;
+    /* Pour harmoniser le look & feel des bordures des champs texte */
+    border: 1px solid rgb(153, 153, 153);
+    border-radius: 5px;
+    background-color: rgb(32, 32, 32);
+    color: antiquewhite;
+    font-size: 60%;
+}
+
+/* Faire en sorte que la liste des gommettes puisse être scroll */
+#gommetteListe.scroll 
+{
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+/* modification de la barre de défilement */
+::-webkit-scrollbar 
+{     
+    width: 10px;     
+    border: 5px solid rgba(86, 86, 86, 0);  
+}  
+::-webkit-scrollbar-track 
+{     
+    background: none; 
+}  
+::-webkit-scrollbar-thumb 
+{     
+    background: rgba(86, 86, 86, 0.4);     
+    border-radius: 10px;     
+    border: 5px solid rgba(86, 86, 86, 0); 
+}  
+::-webkit-scrollbar-thumb:hover 
+{      
+    background: rgba(86, 86, 86, 0.6); 
+}
+
+/* gestion de l'écran */
+@media screen and (max-width: 1000px) 
+{
+    #formBox button
+    {
+        font-size: 80%;
+    }
+}
+
+@media screen and (max-width: 800px) 
+{
+    #formBox button
+    {
+        font-size: 46%;
+    }
+}
